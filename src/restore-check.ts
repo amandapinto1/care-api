@@ -20,12 +20,13 @@ async function main() {
 
   const object = await createR2Client().send(new GetObjectCommand({ Bucket: environment.R2_BUCKET, Key: environment.BACKUP_OBJECT_KEY }));
   const bytes = await object.Body?.transformToByteArray();
-  if (!bytes || !object.Metadata?.iv || !object.Metadata.authTag) throw new Error('Backup object or encryption metadata is missing.');
+  const authTag = object.Metadata?.authTag ?? object.Metadata?.authtag;
+  if (!bytes || !object.Metadata?.iv || !authTag) throw new Error('Backup object or encryption metadata is missing.');
 
   const directory = await mkdtemp(join(tmpdir(), 'care-restore-'));
   const dumpPath = join(directory, 'backup.dump');
   try {
-    const plaintext = decryptBackup({ ciphertext: Buffer.from(bytes), iv: Buffer.from(object.Metadata.iv, 'base64'), authTag: Buffer.from(object.Metadata.authTag, 'base64') });
+    const plaintext = decryptBackup({ ciphertext: Buffer.from(bytes), iv: Buffer.from(object.Metadata.iv, 'base64'), authTag: Buffer.from(authTag, 'base64') });
     await writeFile(dumpPath, plaintext, { mode: 0o600 });
     await execute('pg_restore', ['--clean', '--if-exists', '--no-owner', '--dbname', environment.RESTORE_DATABASE_URL, dumpPath]);
     console.info(JSON.stringify({ status: 'restored', key: environment.BACKUP_OBJECT_KEY }));
