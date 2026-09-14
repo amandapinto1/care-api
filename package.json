@@ -1,0 +1,35 @@
+{
+  "name": "@care/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
+    "worker": "node dist/worker.js",
+    "backup": "node dist/backup.js",
+    "restore-check": "node dist/restore-check.js",
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1132.0",
+    "@aws-sdk/client-s3": "^3.1132.0",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/jwt": "^9.1.0",
+    "@fastify/swagger": "^9.5.1",
+    "@fastify/swagger-ui": "^5.2.3",
+    "dotenv": "^16.6.1",
+    "fastify": "^5.5.0",
+    "fastify-type-provider-zod": "^5.0.0",
+    "pg": "^8.16.3",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/pg": "^8.15.5",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
