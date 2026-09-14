@@ -1,7 +1,2 @@
 [build]
 builder = "DOCKERFILE"
-
-[deploy]
-startCommand = "node dist/server.js"
-healthcheckPath = "/health"
-restartPolicyType = "ON_FAILURE"
