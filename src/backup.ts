@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { execFile } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 import { environment } from './config.js';
@@ -54,4 +55,6 @@ async function main() {
   console.info(JSON.stringify({ status: 'uploaded', key }));
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}
